@@ -58,7 +58,7 @@ def move_side(b: Board, d: int) -> None:
 
 
 board = make_board()
-board.piece = make_piece(pieces.__getitem__('cube'))
+board.piece = make_piece(pieces.__getitem__('right_l'))
 update_piece(board)
 for i in range(3):
     for row in board.board: 
