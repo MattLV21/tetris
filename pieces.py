@@ -4,6 +4,7 @@ from dataclasses import dataclass
 class Piece:
     """ a tetris block/piece """
     shape: list[list[int]]
+    rotation: int
     x: int
     y: int
 
