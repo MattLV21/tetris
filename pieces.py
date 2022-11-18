@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from random import choice
 
 @dataclass
 class Piece:
@@ -13,10 +14,12 @@ def rotate(p: Piece) -> None:
     for i in p.shape:
         i[0], i[1] = i[1], i[0]
 
-def make_piece(s: list[list[int]]) -> Piece:
-    """ spawns a new piece """
-    # 5 to start in the middle 
-    return Piece(s, 0, 0) 
+def make_piece() -> Piece:
+    """ spawns a new random piece """
+    # 4 to start in the middle 
+    i = [i for i in pieces]
+    s = choice(i)
+    return Piece(s, 0, 0, 0) 
 
 # tetris pieces start coords
 pieces = {

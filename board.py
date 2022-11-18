@@ -18,7 +18,7 @@ def make_board() -> Board:
         for j in range(10):
             row.append(EMPTY)
         b.append(row)
-    return Board(b, Piece(None, -1, -1))
+    return Board(b, Piece(None, 0, -1, -1))
 
 def update_piece(b: Board) -> None:
     """ draws the moveing piece """
@@ -34,13 +34,13 @@ def update_piece(b: Board) -> None:
                     board.board[idx1 + i[1]][idx2 + i[0]] = HOVERING
                 break
 
-def line_break(b: Board) -> int:
+def line_breaks(b: Board) -> int:
     """ returns the row that a line has acored 
     returns -1 if no lines have acored """
-    l = -1
+    l = []
     for idx, row in enumerate(b.board):
         if 0 not in row:
-            l = idx
+            l.append(idx)
     return l
 
 def remove_line(b: Board, line: int) -> None:
@@ -58,16 +58,15 @@ def move_side(b: Board, d: int) -> None:
 
 
 board = make_board()
-board.piece = make_piece(pieces.__getitem__('right_l'))
+board.piece = make_piece()
 update_piece(board)
 for i in range(3):
     for row in board.board: 
         print(row)
     move_down(board)
+    rotate(board.piece)
     update_piece(board)
     print()
-rotate(board.piece)
-rotate(board.piece)
-update_piece(board)
+#update_piece(board)
 for row in board.board:
         print(row)
