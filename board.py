@@ -30,8 +30,9 @@ def update_piece(b: Board) -> None:
     for idx1, row in enumerate(board.board):
         for idx2, col in enumerate(row):
             if idx1 == board.piece.y and idx2 == board.piece.x:
-                for ii, i in enumerate(board.piece.shape):
-                    board.board[idx1 + i[1]][idx2 + i[0]] = HOVERING
+                for ii, i in enumerate(pieces.__getitem__(b.piece.type)[b.piece.rotation]):
+                    if idx1 + i[1] >= 0 and idx2 + i[0] >= 0:
+                        board.board[idx1 + i[1]][idx2 + i[0]] = HOVERING
                 break
 
 def line_breaks(b: Board) -> int:
@@ -60,7 +61,7 @@ def move_side(b: Board, d: int) -> None:
 board = make_board()
 board.piece = make_piece()
 update_piece(board)
-for i in range(3):
+for i in range(4):
     for row in board.board: 
         print(row)
     move_down(board)
