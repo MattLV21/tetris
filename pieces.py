@@ -30,10 +30,14 @@ def rotate(p: Piece) -> None:
 
 def make_piece() -> Piece:
     """ spawns a new random piece """
-    # 4 to start in the middle 
     i = [i for i in pieces]
-    #piece = choice(i)
-    piece = 'tower'
+    piece = choice(i)
     shape = pieces.__getitem__(piece)[0]
     return Piece(piece, shape)
 
+def move_down(b: Piece) -> None:
+    """ moves the piece down one line """
+    b.y = b.y + 1
+def move_side(b: Piece, d: int) -> None:
+    """ moves the piece to the left or right """
+    b.x = b.x + d
