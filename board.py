@@ -21,76 +21,67 @@ def make_board() -> Board:
         b.append(row)
     return Board(b, Piece(None, 0))
 
-def update_piece(b: Board) -> None:
-    """ draws the moveing piece """
-    for idx1, row in enumerate(board.board):
-        for idx2, col in enumerate(row):
-            if board.board[idx1][idx2] == HOVERING:
-                board.board[idx1][idx2] = EMPTY
+def get_hovering(b: Board) -> list[int]:
+    """ returns the boards pieces coords """
+    coords = []
+    piece = pieces.__getitem__(b.piece.type)[b.piece.rotation]
+    for i in piece: # in pieces, pieces are transposted... fuck me
+        coords.append([b.piece.y + i[1], b.piece.x + i[0]])
+    return coords
+def get_taken(b: Board) -> list[int]:
+    """ returns the boards taken coords """
+    coords = []
+    for idx, row in enumerate(b.board):
+        for idx1, col in enumerate(row):
+            if b.board[idx][idx1] == TAKEN:
+                coords.append([idx, idx1])
+    return coords
 
-    for idx1, row in enumerate(board.board):
-        for idx2, col in enumerate(row):
-            if idx1 == board.piece.y and idx2 == board.piece.x:
-                for ii, i in enumerate(pieces.__getitem__(b.piece.type)[b.piece.rotation]):
-                    if idx1 + i[1] >= 0 and idx2 + i[0] >= 0:
-                        board.board[idx1 + i[1]][idx2 + i[0]] = HOVERING
-                break
+def place_piece(b: Board) -> None:
+    """ replace HOVERING piece with TAKEN """
+    piece = get_hovering(b)
+    for i in piece:
+        #print(i)
+        b.board[i[0]][i[1]] = TAKEN
 
-def line_breaks(b: Board) -> int:
+def line_breaks(b: Board) -> list[int]:
     """ returns the row that a line has acored 
     returns -1 if no lines have acored """
     l = []
     for idx, row in enumerate(b.board):
-        if 0 not in row:
+        if EMPTY not in row and HOVERING not in row:
             l.append(idx)
     return l
 
 def remove_line(b: Board, line: int) -> None:
     """ removes a line from board and
     pushes all lines above down """
-    for i in range(line, 20):
-        b.board[i] = b.board[i-1]
+    for idx, i in enumerate(b.board[line]):
+        b.board[line][idx] = EMPTY
 
-def valided(b: Board) -> bool:
-    """ cheacks if piece can decent """
-    coords = []
-    for idx1, row in enumerate(board.board):
-        for idx2, col in enumerate(row):
-            if board.board[idx1][idx2] == HOVERING:
-                coords.append([idx1, idx2])
-    for coord in coords:
-        if coord[0] + 1 == len(b.board):
-            return False
-        elif b.board[coord[0]+1][coord[1]] == TAKEN:
-            return False
-    return True
+def show(b: Board) -> None:
+    """ prints the board """
+    for i, row in enumerate(b.board):
+        for j, col in enumerate(row):
+            if b.board[i][j] == HOVERING:
+                b.board[i][j] = EMPTY
+    piece = pieces.__getitem__(b.piece.type)[b.piece.rotation]
+    for i in piece: # in pieces, pieces are transposted... fuck me
+        b.board[b.piece.y + i[1]][b.piece.x + i[0]] = HOVERING
+    for i in get_taken(b):
+        b.board[i[0]][i[1]] = TAKEN
+    
+    for row in b.board:
+        print(row)
 
-def place_piece(b: Board) -> None:
-    """ replace HOVERING piece with TAKEN """
-    for idx1, row in enumerate(board.board):
-        for idx2, col in enumerate(row):
-            if board.board[idx1][idx2] == HOVERING:
-                board.board[idx1][idx2] = TAKEN
 
-# bug piece inside piece when rotate and decents into other piece
-
+"""
 board = make_board()
 board.piece = make_piece()
-update_piece(board)
 
-for i in range(3):
-    i = valided(board)
-    while i:
-        for row in board.board: 
-            print(row)
-        move_down(board.piece)
-        rotate(board.piece)
-        update_piece(board)
-        print()
-        i = valided(board)
 
-    place_piece(board)
-    for row in board.board:
-        print(row)
-    board.piece = make_piece()
-    print()
+for i in range(10):
+    move_down(board.piece)
+rotate(board.piece)
+show(board)
+"""
