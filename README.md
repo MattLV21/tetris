@@ -1,0 +1,3 @@
+# tetris
+this is a hobby projekt...
+tetris battels 2 player
