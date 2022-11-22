@@ -1,6 +1,7 @@
 import pygame as pg
 from board import make_board, get_hovering, get_taken, move_down, move_side, place_piece
-from pieces import make_piece
+from pieces import make_piece, rotate
+import sys
 
 board = make_board()
 board.piece = make_piece()
@@ -17,18 +18,47 @@ CENTER_Y = screen.get_size()[1]/2 - (21*20)/2
 
 pg.display.set_caption('Tetris')
 
+def events():
+    events = pg.event.get()
+    for event in events:
+        if event.type == pg.QUIT:
+            sys.exit()
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_LEFT:
+                hover = get_hovering(board)
+                moveable = True
+                for coord in hover:
+                    if coord[1] <= 0:
+                        moveable = False
+                        break
+                if moveable == True:
+                    move_side(board.piece, -1)
+            if event.key == pg.K_RIGHT:
+                hover = get_hovering(board)
+                moveable = True
+                for coord in hover:
+                    if coord[1] >= len(board.board[0])-1:
+                        moveable = False
+                        break
+                if moveable == True:
+                    move_side(board.piece, 1)
+
+            if event.key == pg.K_UP:
+                rotate(board.piece)
+
+            if event.key == pg.K_DOWN:
+                print('hey')
+                move_down(board.piece)
 
 clock = pg.time.Clock()
+ticker = 100
 
 while True:
 
-    dt = clock.tick(5)
-    checked = False
+    dt = clock.tick(60)
+    time = pg.time.get_ticks()
 
-    event = pg.event.poll()
-
-    if event.type == pg.QUIT:
-        break
+    events()
 
     screen.fill(BLACK)
 
@@ -36,20 +66,23 @@ while True:
     
     hover = get_hovering(board)
     taken = get_taken(board)
-    print(taken)
 
-    for coord in hover:
-        if coord[0] >= len(board.board)-1 and not checked:
-            print(get_hovering(board))
+    for coord in hover: # if at the bottom of the row
+        if coord[0] >= 19:
             place_piece(board)
             board.piece = make_piece()
-            checked = True
-        elif coord[0] <= len(board.board) and not checked:
-            if board.board[coord[0]-1][coord[1]] in taken:
-                print(coord[0], coord[1])
-                place_piece(board)
-                board.piece = make_piece()
-                checked = True
+            break
+        elif coord[0]+1 < len(board.board):
+            placed = False
+            for tak_coord in taken:
+                if coord[0]+1 == tak_coord[0] and coord[1] == tak_coord[1]:
+                    place_piece(board)
+                    board.piece = make_piece()
+                    placed = True
+                    break
+            if placed:
+                break
+
 
     for idx, row in enumerate(board.board):
         for idx1, col in enumerate(row):
@@ -59,9 +92,11 @@ while True:
                 pg.draw.rect(screen, WHITE, [CENTER_X + 21*idx1, CENTER_Y + 21*idx, 20, 20])
             else:
                 pg.draw.rect(screen, WHITE, [CENTER_X + 21*idx1, CENTER_Y + 21*idx, 20, 20])
-    try:
+    
+    if ticker == 0:
         move_down(board.piece)
-    except:
-        ...
+        ticker = 100
+    else:
+        ticker = ticker - 1
 
     pg.display.flip()

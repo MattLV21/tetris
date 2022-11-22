@@ -35,7 +35,7 @@ def make_piece() -> Piece:
     i = [i for i in pieces]
     piece = choice(i)
     shape = pieces.__getitem__(piece)[0]
-    return Piece(piece, shape, 0, 4, 0)
+    return Piece(piece, shape, 0, 4, -1)
 
 def move_down(b: Piece) -> None:
     """ moves the piece down one line """
