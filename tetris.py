@@ -1,5 +1,5 @@
 import pygame as pg
-from board import make_board, get_hovering, get_taken, move_down, move_side, place_piece
+from board import make_board, get_hovering, get_taken, move_down, move_side, place_piece, TAKEN, line_breaks, remove_line
 from pieces import make_piece, rotate
 import sys
 
@@ -28,7 +28,7 @@ def events():
                 hover = get_hovering(board)
                 moveable = True
                 for coord in hover:
-                    if coord[1] <= 0:
+                    if coord[1] <= 0 or board.board[coord[0]][coord[1]-1] == TAKEN:
                         moveable = False
                         break
                 if moveable == True:
@@ -37,7 +37,7 @@ def events():
                 hover = get_hovering(board)
                 moveable = True
                 for coord in hover:
-                    if coord[1] >= len(board.board[0])-1:
+                    if coord[1] >= len(board.board[0])-1 or board.board[coord[0]][coord[1]+1] == TAKEN:
                         moveable = False
                         break
                 if moveable == True:
@@ -47,7 +47,6 @@ def events():
                 rotate(board.piece)
 
             if event.key == pg.K_DOWN:
-                print('hey')
                 move_down(board.piece)
 
 clock = pg.time.Clock()
@@ -83,6 +82,9 @@ while True:
             if placed:
                 break
 
+    breaks = line_breaks(board)
+    for line in breaks:
+        remove_line(board, line)
 
     for idx, row in enumerate(board.board):
         for idx1, col in enumerate(row):

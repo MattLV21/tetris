@@ -58,6 +58,11 @@ def remove_line(b: Board, line: int) -> None:
     pushes all lines above down """
     for idx, i in enumerate(b.board[line]):
         b.board[line][idx] = EMPTY
+    
+    for idx, row in enumerate(b.board):
+        if line-1 >= idx and idx > 0 and idx < len(b.board):
+            b.board[idx] = b.board[idx+1]
+
 
 def show(b: Board) -> None:
     """ prints the board """
