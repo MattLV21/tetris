@@ -56,12 +56,11 @@ def line_breaks(b: Board) -> list[int]:
 def remove_line(b: Board, line: int) -> None:
     """ removes a line from board and
     pushes all lines above down """
-    for idx, i in enumerate(b.board[line]):
-        b.board[line][idx] = EMPTY
-    
-    for idx, row in enumerate(b.board):
-        if line-1 >= idx and idx > 0 and idx < len(b.board):
-            b.board[idx] = b.board[idx+1]
+    if line != 0:
+        for idx, i in enumerate(b.board[line]):
+            b.board[line][idx] = b.board[line-1][idx]
+        remove_line(b, line-1)
+
 
 
 def show(b: Board) -> None:

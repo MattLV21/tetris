@@ -83,7 +83,7 @@ while True:
                 break
 
     breaks = line_breaks(board)
-    for line in breaks:
+    for line in breaks[::-1]:
         remove_line(board, line)
 
     for idx, row in enumerate(board.board):
