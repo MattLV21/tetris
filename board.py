@@ -21,12 +21,15 @@ def make_board() -> Board:
         b.append(row)
     return Board(b, Piece(None, 0))
 
-def get_hovering(b: Board) -> list[int]:
+def get_hovering(p: Piece) -> list[int]:
     """ returns the boards pieces coords """
     coords = []
-    piece = pieces.__getitem__(b.piece.type)[b.piece.rotation]
-    for i in piece: # in pieces, pieces are transposted... fuck me
-        coords.append([b.piece.y + i[1], b.piece.x + i[0]])
+    # piece = pieces.__getitem__(b.piece.type)[b.piece.rotation]
+    for i in p.shape: # in pieces, pieces are transposted... fuck me
+        pos_y = p.y + i[1]
+        pos_x = p.x + i[0]
+        if pos_y <= 19 and pos_y >= 0 and pos_x <= 9 and pos_x >= 0:
+            coords.append([pos_y, pos_x])
     return coords
 def get_taken(b: Board) -> list[int]:
     """ returns the boards taken coords """
@@ -39,7 +42,7 @@ def get_taken(b: Board) -> list[int]:
 
 def place_piece(b: Board) -> None:
     """ replace HOVERING piece with TAKEN """
-    piece = get_hovering(b)
+    piece = get_hovering(b.piece)
     for i in piece:
         #print(i)
         b.board[i[0]][i[1]] = TAKEN

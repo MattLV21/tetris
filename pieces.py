@@ -30,6 +30,10 @@ def rotate(p: Piece) -> None:
         p.rotation = 0
     p.shape = pieces.__getitem__(p.type)[p.rotation]
 
+def copy_piece(p: Piece) -> Piece:
+    """ returns a copy of a piece """
+    return Piece(p.type, p.shape, p.rotation, p.x, p.y)
+
 def make_piece() -> Piece:
     """ spawns a new random piece """
     i = [i for i in pieces]
