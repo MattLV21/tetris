@@ -9,7 +9,6 @@ class Board:
     """ tetris board """
     board: list[list[int]]
     piece: Piece
-    score: int = 0
 
 def make_board() -> Board:
     """ creats a empty tetris board """
@@ -80,15 +79,3 @@ def show(b: Board) -> None:
     
     for row in b.board:
         print(row)
-
-
-"""
-board = make_board()
-board.piece = make_piece()
-
-
-for i in range(10):
-    move_down(board.piece)
-rotate(board.piece)
-show(board)
-"""
