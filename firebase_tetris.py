@@ -69,10 +69,7 @@ def upload_data(s: Server) -> None:
 	for i in s.players:
 		dict1 = dict1 | make_player_dict(i)
 
-		#with open(f'server_{s.id}.json', 'w') as f:
-		#	json.dump(dict1, f)
-		#with open(f'server_{s.id}.json', "r") as f:
-		#	file_contents = json.load(f)
+
 	ref.set(dict1)
 
 """ 
