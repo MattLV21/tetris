@@ -56,28 +56,29 @@ def make_player_dict(p: Player) -> dict:
 	hover = get_hovering(p.board.piece)
 	taken = get_taken(p.board)
 	dict1 = {
-		f"{p.id}":{
 			"hover": f"{hover}",
 			"taken": f"{taken}"
-		},
 	}
 	return dict1
-def upload_data(s: Server) -> None:
-	""" uploads data to server """
-	ref = db.reference(f"/server_{s.id}")
-	dict1 = {}
+def setup(s: Server) -> None:
+	""" sets up database to use for s """
 	for i in s.players:
-		dict1 = dict1 | make_player_dict(i)
-
-
+		ref = db.reference(f"/server_{s.id}/{i.name}_{i.id}")
+		dict1 = make_player_dict(i)
+		ref.set(dict1)
+def update_player(p: Player, s: Server) -> None:
+	""" updates the player data in database for s """
+	ref = db.reference(f"/server_{s.id}/{p.name}_{p.id}")
+	dict1 = make_player_dict(p)
 	ref.set(dict1)
 
-""" 
+
+"""
 player1_id = make_id(10)
 player2_id = make_id(10)
 server_id = make_id(10)
-player = make_player(player1_id, 'MattLV21', make_board())
-player2 = make_player(player2_id, 'other user', make_board())
+player = make_player(player1_id, 'Mattias the winner', make_board())
+player2 = make_player(player2_id, 'Nanna the loser', make_board())
 server = make_server(server_id)
 
 add_player(player, server)
@@ -92,6 +93,8 @@ player_dict = make_player_dict(player)
 
 for player in server.players:
 	print(player.id)
-upload_data(server)
-
+setup(server)
+import time
+time.sleep(2)
+update_player(player, server)
 """
