@@ -38,7 +38,9 @@ def make_id(length: int) -> Id:
 def make_player(id: Id, username: str, board: Board) -> Player:
 	""" creates a player """ 
 	return Player(id, username, board)
-
+def get_username(p: Player) -> str:
+	""" returns player p's username """
+	return p.name
 def make_server(id: Id) -> Server:
 	""" creates a server """
 	return Server(id, [])
@@ -49,7 +51,9 @@ def add_player(p: Player, s: Server) -> None:
 def remove_player(p: Player, s: Server) -> None:
 	""" removes p from s """
 	s.players.remove(p)
-
+def get_players(s: Server) -> list[Player]:
+	""" returns all current players in s """
+	return s.players
 
 def make_player_dict(p: Player) -> dict:
 	""" returns a new dict with p data """
@@ -72,11 +76,15 @@ def update_player(p: Player, s: Server) -> None:
 	dict1 = make_player_dict(p)
 	ref.set(dict1)
 
+def get_player(p: Player, s: Server) -> dict:
+	""" gets the player data """
+	ref = db.reference(f"/server_{s.id}/{p.name}_{p.id}")
+	return ref.get()
 
-"""
-player1_id = make_id(10)
-player2_id = make_id(10)
-server_id = make_id(10)
+
+player1_id = '616072254938368'
+player2_id = '539203177953673'
+server_id = '194127632974777'
 player = make_player(player1_id, 'Mattias the winner', make_board())
 player2 = make_player(player2_id, 'Nanna the loser', make_board())
 server = make_server(server_id)
@@ -91,10 +99,13 @@ data = [1, 2, 1, 2, 3]
 
 player_dict = make_player_dict(player)
 
-for player in server.players:
-	print(player.id)
 setup(server)
-import time
-time.sleep(2)
+
+player.name = 'MattLV21'
+
 update_player(player, server)
-"""
+
+data = get_player(player, server)
+print(data.__getitem__('hover'))
+print(type(data.__getitem__('hover')))
+print(data.__getitem__('hover').split(']'))
