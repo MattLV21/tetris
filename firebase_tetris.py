@@ -6,7 +6,7 @@ import random
 from dataclasses import dataclass
 from board import Board, make_board, get_hovering, get_taken, make_piece
 print()
-os.chdir(os.getcwd()+'/Tetris/tetris')
+#os.chdir(os.getcwd()+'/Tetris/tetris')
 
 cred_obj = firebase_admin.credentials.Certificate('serviceAccountKey.json')
 default_app = firebase_admin.initialize_app(cred_obj, {
@@ -80,32 +80,23 @@ def get_player(p: Player, s: Server) -> dict:
 	""" gets the player data """
 	ref = db.reference(f"/server_{s.id}/{p.name}_{p.id}")
 	return ref.get()
+def players(s: Server) -> int:
+	""" returns the number of online players """
+	ref = db.reference(f"/server_{s.id}")
+	
+	return len(ref.get())
 
 
-player1_id = '616072254938368'
-player2_id = '539203177953673'
-server_id = '194127632974777'
-player = make_player(player1_id, 'Mattias the winner', make_board())
-player2 = make_player(player2_id, 'Nanna the loser', make_board())
-server = make_server(server_id)
-
-add_player(player, server)
-add_player(player2, server)
-
-for player in server.players:
-	player.board.piece = make_piece()
-
-data = [1, 2, 1, 2, 3]
-
-player_dict = make_player_dict(player)
-
-setup(server)
-
-player.name = 'MattLV21'
-
-update_player(player, server)
-
-data = get_player(player, server)
-print(data.__getitem__('hover'))
-print(type(data.__getitem__('hover')))
-print(data.__getitem__('hover').split(']'))
+def __to_list(old: list, new: list) -> list:
+	""""""
+	if len(old) >= 2:
+		new.append([int(old[0]), int(old[1])])
+		return __to_list(old[2:], new)
+	else:
+		return new
+def data_to_list(n: str) -> list:
+	""" recrates a piece of data into a useable list """
+	data = n.replace('[', '').replace(']', '').replace(' ', '')
+	data = data.split(',')
+	return __to_list(data, [])
+	
